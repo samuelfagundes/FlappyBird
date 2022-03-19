@@ -51,11 +51,17 @@ function love.load ()
         ['music'] = love.audio.newSource('sounds/marios_way.mp3', 'static')
     }
 
+    sounds['music']:setVolume(0.1)
+    sounds['explosion']:setVolume(0.1)
+    sounds['score']:setVolume(0.1)
+    sounds['jump']:setVolume(0.1)
+    sounds['hurt']:setVolume(0.1)
+
     sounds['music']:setLooping(true)
     sounds['music']:play()
 
     push:setupScreen (VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-        vsync = true,
+        vsync = false,
         fullscreen = false,
         resizable = true
     })
@@ -64,7 +70,7 @@ function love.load ()
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
-        ['score'] = function() return ScoreState() end
+        ['score'] = function() return ScoreState() end,
     }
     gStateMachine:change('title')
 
@@ -98,8 +104,13 @@ function love.mouse.wasPressed(button)
 end
 
 function love.update (dt)
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    if pause == false then
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    else
+        backgroundScroll = (backgroundScroll + 0 * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + 0 * dt) % VIRTUAL_WIDTH
+    end
 
     gStateMachine:update(dt)
 
